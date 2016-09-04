@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+
+<struts>
+	<!-- constant：常量 -->
+	<!-- 用于开发模式，表示修改web.xml后，马上修改tomcat中的配置,而不用重启tomcat -->
+	<constant name="struts.devMode" value="true" />
+	<!--解决乱码 -->
+	<constant name="struts.i18n.encoding" value="UTF-8" />
+
+	<!-- 指定允许上传的文件最大字节数。默认值是2097152(2M) -->
+	<constant name="struts.multipart.maxSize" value="209715200" />
+
+	<!-- 设置上次文件的临时文件夹-->
+	<constant name="struts.multipart.saveDir" value="/tempUpload"></constant> 
+
+	<package name="default" namespace="/" extends="struts-default">
+		<action name="watermark" class="com.yc.picwatermark.actions.WaterMarkAction" method="watermark">
+			<!-- 动态设置savePath的属性值 -->
+			<param name="savePath">/uploadPic</param>
+			<result name="success">/WEB-INF/pages/watermark.jsp</result>
+
+			<interceptor-ref name="fileUpload">
+				<!-- 文件过滤 -->
+				<param name="allowedTypes">image/bmp,image/png,image/gif,image/jpeg</param>
+
+				<!-- 文件大小, 以字节为单位 -->
+				<param name="maximumSize">20971520</param>
+			</interceptor-ref>
+
+			<!-- 默认拦截器必须放在fileUpload之后，否则无效 -->
+			<interceptor-ref name="defaultStack" />
+		</action>
+	</package>
+</struts>
